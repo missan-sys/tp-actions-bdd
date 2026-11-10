@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs: 
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code du depot
+        uses: actions/checkout@v4
+
+      - name: préparer la base de données
+        run: |
+          bash db/setup.sh
+
+      - name : installer Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+        working directory:  python-app
+        
+      - name : installer les dépendances
+        run: |
+          pip install -r requirements.txt
+      
+      - name: lancer les tests
+        run: |
+          pytest -v
+
