@@ -1,4 +1,3 @@
-
 import psycopg2
 
 
@@ -10,20 +9,6 @@ def get_connection():
         password="postgres",
         port="5432"
     )
-
-
-def add_student(name, grade):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "INSERT INTO students (name, grade) VALUES (%s, %s)",
-        (name, grade)
-    )
-
-    conn.commit()
-    cursor.close()
-    conn.close()
 
 
 def get_student(student_id):
