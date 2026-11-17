@@ -11,6 +11,20 @@ def get_connection():
     )
 
 
+def add_student(name, grade):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO students (name, grade) VALUES (%s, %s)",
+        (name, grade)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
 def get_student(student_id):
     conn = get_connection()
     cursor = conn.cursor()
