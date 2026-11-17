@@ -1,4 +1,5 @@
-name: CI Python
+
+name: CI Multi-langages
 
 on:
   push:
@@ -6,25 +7,93 @@ on:
   pull_request:
 
 jobs:
+
   python:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Recuperer le code du depot
+      - name: Recuperer le code
         uses: actions/checkout@v4
 
-      - name: préparer la base de données
+      - name: Préparer la base de données
         run: bash db/setup.sh
 
-      - name: installer Python 3.12
+      - name: Installer Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: installer les dépendances
+      - name: Installer les dépendances
         run: pip install -r requirements.txt
         working-directory: python-app
 
-      - name: lancer les tests
+      - name: Lancer les tests
         run: pytest -v
         working-directory: python-app
+
+  node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Préparer la base de données
+        run: bash db/setup.sh
+
+      - name: Installer Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer les dépendances
+        run: npm ci
+        working-directory: node-app
+
+      - name: Lancer les tests
+        run: npm test
+        working-directory: node-app
+
+  java:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Préparer la base de données
+        run: bash db/setup.sh
+
+      - name: Installer Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Compiler et tester
+        run: mvn -B package
+        working-directory: java-app
+
+  php:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Préparer la base de données
+        run: bash db/setup.sh
+
+      - name: Installer PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo, pdo_pgsql
+
+      - name: Installer les dépendances
+        run: composer install --no-interaction
+        working-directory: php-app
+
+      - name: Lancer les tests
+        run: vendor/bin/phpunit tests
+        working-directory: php-app
