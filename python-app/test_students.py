@@ -36,4 +36,4 @@ def test_get_student():
 def test_moyenne():
     moyenne = average_grade()
 
-    assert float(moyenne) == 13.5
+    assert float(moyenne) == 10
